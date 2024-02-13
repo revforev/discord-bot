@@ -6,10 +6,22 @@ dotenv.config();
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const {token} = process.env.DISCORD_TOKEN;
+const { token } = process.env.DISCORD_TOKEN;
+
+const openai = require('openai');
+const openaiClient = new openai.OpenAI(process.env.OPENAI_API_KEY);
+
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMembers,]
+});
+
+
+
 
 // COMMAND HANDLER (attaching a commands property)
 client.commands = new Collection();
@@ -43,5 +55,6 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
 
 client.login(token);
